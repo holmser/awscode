@@ -34,22 +34,26 @@ var listCmd = &cobra.Command{
 			MaxRetries: aws.Int(3),
 		}))
 
-		svc := codecommit.New(sess, &aws.Config{
+		codeCommit := codecommit.New(sess, &aws.Config{
 			Region: aws.String("us-east-1"),
 		})
-		repos, err := svc.ListRepositories(nil)
+		repos, err := codeCommit.ListRepositories(nil)
 		if err != nil {
 			fmt.Println(err)
 		}
 
 		for _, repo := range repos.Repositories {
 			fmt.Println("○", *repo.RepositoryName)
+
+			out, err := codeCommit.GetRepository(&codecommit.GetRepositoryInput{
+				RepositoryName: repo.RepositoryName,
+			})
+			if err != nil {
+				fmt.Println()
+			}
+			fmt.Println(out)
 		}
 	},
-}
-
-func tester(a int) {
-
 }
 
 func init() {
