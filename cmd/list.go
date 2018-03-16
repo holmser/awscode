@@ -29,7 +29,7 @@ var listCmd = &cobra.Command{
 	Short: "List codecommit repos",
 	Long:  `This will list all CodeCommit repos your credentials have acess to`,
 	Run: func(cmd *cobra.Command, args []string) {
-		//fmt.Println("list called")
+
 		sess := session.Must(session.NewSession(&aws.Config{
 			MaxRetries: aws.Int(3),
 		}))
