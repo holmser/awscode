@@ -28,13 +28,6 @@ var listCmd = &cobra.Command{
 	Long:  `This will list all CodeCommit repos your credentials have access to`,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		// sess := session.Must(session.NewSession(&aws.Config{
-		// 	MaxRetries: aws.Int(3),
-		// }))
-
-		// codeCommit := codecommit.New(sess, &aws.Config{
-		// 	Region: aws.String(Region),
-		// })
 		codeCommit := initAWS()
 
 		repos, err := codeCommit.ListRepositories(nil)
