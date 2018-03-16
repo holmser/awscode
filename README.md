@@ -8,7 +8,7 @@ Requirements:
 - Go Environment set up correctly
 
 
-```
+```bash
 # Download the package
 go get github.com/holmser/awscode
 
