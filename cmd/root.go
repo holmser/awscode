@@ -18,6 +18,9 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/codecommit"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -94,4 +97,15 @@ func initConfig() {
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}
+}
+
+func initAWS() *codecommit.CodeCommit {
+	sess := session.Must(session.NewSession(&aws.Config{
+		MaxRetries: aws.Int(3),
+	}))
+
+	codeCommit := codecommit.New(sess, &aws.Config{
+		Region: aws.String(Region),
+	})
+	return codeCommit
 }

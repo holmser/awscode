@@ -17,8 +17,6 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/codecommit"
 	"github.com/spf13/cobra"
 )
@@ -27,16 +25,18 @@ import (
 var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List codecommit repos",
-	Long:  `This will list all CodeCommit repos your credentials have acess to`,
+	Long:  `This will list all CodeCommit repos your credentials have access to`,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		sess := session.Must(session.NewSession(&aws.Config{
-			MaxRetries: aws.Int(3),
-		}))
+		// sess := session.Must(session.NewSession(&aws.Config{
+		// 	MaxRetries: aws.Int(3),
+		// }))
 
-		codeCommit := codecommit.New(sess, &aws.Config{
-			Region: aws.String(Region),
-		})
+		// codeCommit := codecommit.New(sess, &aws.Config{
+		// 	Region: aws.String(Region),
+		// })
+		codeCommit := initAWS()
+
 		repos, err := codeCommit.ListRepositories(nil)
 		if err != nil {
 			fmt.Println(err)
@@ -45,8 +45,11 @@ var listCmd = &cobra.Command{
 		// declare channel for threading description API calls
 		ch := make(chan *codecommit.GetRepositoryOutput)
 
+		// Iterate over repositories
+		// function literal kicks off a goroutine to make multithreaded API calls
+		// iterate over channel to
 		for _, repo := range repos.Repositories {
-			// currently doesn't do anything important, but will be more important later
+			// Function literal publishing to a channel
 			go func(ch chan<- *codecommit.GetRepositoryOutput, rname *string) {
 				out, err := codeCommit.GetRepository(&codecommit.GetRepositoryInput{
 					RepositoryName: rname,

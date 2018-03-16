@@ -1,4 +1,4 @@
-// Copyright © 2018 Chris Holmes chris@holmser.net
+// Copyright © 2018 Chris Holmes
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,16 +21,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// createCmd represents the create command
-var createCmd = &cobra.Command{
-	Use:   "create",
-	Short: "Create a new Repo",
+// deleteCmd represents the delete command
+var deleteCmd = &cobra.Command{
+	Use:   "delete",
+	Short: "delete a repository",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		//fmt.Println("create called")
 		codeCommit := initAWS()
 		if repoName != "" {
-			res, err := codeCommit.CreateRepository(&codecommit.CreateRepositoryInput{RepositoryName: &repoName})
+			res, err := codeCommit.DeleteRepository(&codecommit.DeleteRepositoryInput{RepositoryName: &repoName})
 			if err != nil {
 				fmt.Println()
 			}
@@ -38,18 +37,17 @@ var createCmd = &cobra.Command{
 		}
 	},
 }
-var repoName string
 
 func init() {
-	rootCmd.AddCommand(createCmd)
-
+	rootCmd.AddCommand(deleteCmd)
+	deleteCmd.Flags().StringVarP(&repoName, "name", "n", "", "repository name")
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// createCmd.PersistentFlags().String("foo", "", "A help for foo")
-	createCmd.Flags().StringVarP(&repoName, "name", "n", "", "repository name")
+	// deleteCmd.PersistentFlags().String("foo", "", "A help for foo")
+
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// createCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// deleteCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
