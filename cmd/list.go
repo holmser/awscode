@@ -48,10 +48,11 @@ var listCmd = &cobra.Command{
 			out, err := codeCommit.GetRepository(&codecommit.GetRepositoryInput{
 				RepositoryName: repo.RepositoryName,
 			})
+
 			if err != nil {
 				fmt.Println()
 			}
-			fmt.Println(out)
+			fmt.Println("\t", *out.RepositoryMetadata.CloneUrlSsh)
 		}
 	},
 }
