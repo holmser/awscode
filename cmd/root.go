@@ -1,4 +1,4 @@
-// Copyright © 2018 Chris HOlmes chris@holmser.net
+// Copyright © 2018 Chris Holmes chris@holmser.net
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,10 +25,16 @@ import (
 
 var cfgFile string
 
+// Region defines AWS region for API call
+var Region string
+
+// Verbose represents verbose flag
+var Verbose bool
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "go-codecommit",
-	Short: "A brief description of your application",
+	Use:   "awscode",
+	Short: "cli tool for interacting with AWS Code services",
 	Long: `A longer description that spans multiple lines and likely contains
 examples and usage of using your application. For example:
 
@@ -60,6 +66,8 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.PersistentFlags().BoolVarP(&Verbose, "verbose", "v", false, "verbose output")
+	rootCmd.PersistentFlags().StringVarP(&Region, "region", "r", "us-east-1", "AWS region")
 }
 
 // initConfig reads in config file and ENV variables if set.

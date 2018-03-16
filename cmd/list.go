@@ -35,24 +35,32 @@ var listCmd = &cobra.Command{
 		}))
 
 		codeCommit := codecommit.New(sess, &aws.Config{
-			Region: aws.String("us-east-1"),
+			Region: aws.String(Region),
 		})
 		repos, err := codeCommit.ListRepositories(nil)
 		if err != nil {
 			fmt.Println(err)
 		}
 
+		// declare channel for threading description API calls
+		ch := make(chan *codecommit.GetRepositoryOutput)
+
 		for _, repo := range repos.Repositories {
-			fmt.Println("○", *repo.RepositoryName)
-
-			out, err := codeCommit.GetRepository(&codecommit.GetRepositoryInput{
-				RepositoryName: repo.RepositoryName,
-			})
-
-			if err != nil {
-				fmt.Println()
-			}
-			fmt.Println("\t", *out.RepositoryMetadata.CloneUrlSsh)
+			// currently doesn't do anything important, but will be more important later
+			go func(ch chan<- *codecommit.GetRepositoryOutput, rname *string) {
+				out, err := codeCommit.GetRepository(&codecommit.GetRepositoryInput{
+					RepositoryName: rname,
+				})
+				if err != nil {
+					fmt.Println(err)
+				}
+				ch <- out
+			}(ch, repo.RepositoryName)
+		}
+		// iterate over channel to print repos
+		for range repos.Repositories {
+			repo := <-ch
+			fmt.Println(*repo.RepositoryMetadata.RepositoryName)
 		}
 	},
 }

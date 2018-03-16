@@ -23,7 +23,7 @@ import (
 // createCmd represents the create command
 var createCmd = &cobra.Command{
 	Use:   "create",
-	Short: "A brief description of your command",
+	Short: "Create a new Repo",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 
